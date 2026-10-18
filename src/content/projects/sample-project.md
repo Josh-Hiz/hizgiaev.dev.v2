@@ -5,7 +5,7 @@ date: 2026-10-17
 topic: gpu
 tags: [sample]
 repo: "https://github.com/"
-draft: true
+draft: false
 ---
 
 Placeholder text for a project write-up.
