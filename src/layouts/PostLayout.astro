@@ -20,7 +20,7 @@ const links = [
 ---
 
 <BaseLayout title={`${title} · ${site.name}`} description={description}>
-  <article class="mx-auto max-w-2xl pt-12 pb-16 sm:pt-16 md:pb-20">
+  <article class="mx-auto max-w-2xl pt-12 pb-12 sm:pt-16">
     <header class="border-b border-rule pb-8">
       <p class="label mb-5">
         {TOPIC_LABELS[topic]} · <time datetime={date.toISOString()}>{formatDate(date)}</time>
@@ -56,7 +56,7 @@ const links = [
       <slot />
     </div>
 
-    <footer class="mt-14 border-t border-rule pt-6">
+    <footer class="mt-12 border-t border-rule pt-6">
       <a href={back.href} class="label transition-colors hover:text-accent">← {back.label}</a>
     </footer>
   </article>

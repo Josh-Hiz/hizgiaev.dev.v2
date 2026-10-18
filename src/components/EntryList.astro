@@ -13,14 +13,16 @@ interface Props {
 }
 
 const { entries, base, empty = "Nothing published yet.", level = 2 } = Astro.props;
-const Title = level === 3 ? "h3" : "h2";
+const nested = level === 3;
+const Title = nested ? "h3" : "h2";
 ---
 
 {
   entries.length === 0 ? (
-    <p class="caption mt-12">{empty}</p>
+    <p class:list={["caption", nested ? "mt-4" : "mt-12"]}>{empty}</p>
   ) : (
-    <ol class="mt-12 max-w-3xl divide-y divide-rule border-y border-rule">
+    // Under a section heading, the heading's rule is the list's top edge: no gap, no second rule.
+    <ol class:list={["max-w-3xl divide-y divide-rule border-b border-rule", nested ? "" : "mt-12 border-t"]}>
       {entries.map(({ id, data }) => (
         <li class="grid gap-1 py-5 sm:grid-cols-[8.5rem_1fr] sm:gap-6">
           <p class="caption pt-[0.35rem]">
