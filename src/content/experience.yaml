@@ -1,0 +1,26 @@
+# PLACEHOLDER entries for the About page: replace with your own.
+# Each entry needs a unique id. Within a section, list the most recent first.
+
+- id: role-current
+  section: experience
+  start: "20XX"
+  end: Present
+  title: "[Role]"
+  org: "[Organisation]"
+  summary: "[Placeholder: one or two sentences on what you worked on and what came of it.]"
+
+- id: role-previous
+  section: experience
+  start: "20XX"
+  end: "20XX"
+  title: "[Role]"
+  org: "[Organisation]"
+  summary: "[Placeholder: one or two sentences on what you worked on and what came of it.]"
+
+- id: degree
+  section: education
+  start: "20XX"
+  end: "20XX"
+  title: "[Degree, subject]"
+  org: "[Institution]"
+  summary: "[Placeholder: thesis, focus or notable coursework.]"

@@ -1,0 +1,63 @@
+---
+title: "Sample post"
+description: "A placeholder that shows how each piece of a post renders. Delete it once you've written a real one."
+date: 2026-10-17
+topic: physics
+tags: [sample, numerics]
+draft: true
+---
+
+This is placeholder text, not a real post. It exists to show how paragraphs, headings, math,
+code and figures look in the site's style. It is marked `draft: true`, so it appears while
+running `astro dev` and never in a build. It is an `.mdx` file, which is what lets it contain
+the 3D figure below; a plain `.md` post can do everything else here.
+
+## A 3D figure
+
+Any `.mdx` post can place an interactive figure with one line, no import needed:
+
+<Figure3D figure="lorenz" number={1} caption="The Lorenz attractor, σ = 10, ρ = 28, β = 8/3." />
+
+The same scene takes parameters, so a post can show a variation of it:
+
+<Figure3D figure="lorenz" number={2} params={{ rho: 15, skip: 0 }} caption="Below the chaotic threshold, ρ = 15: trajectories settle onto a fixed point." />
+
+## Inline and display math
+
+The Hamiltonian of a simple pendulum is $H = \tfrac{1}{2}p^2 - \cos q$, which gives Hamilton's
+equations
+
+$$
+\dot q = \frac{\partial H}{\partial p} = p, \qquad
+\dot p = -\frac{\partial H}{\partial q} = -\sin q .
+$$
+
+## Code
+
+```cpp
+// Leapfrog: kick, drift, kick.
+for (int i = 0; i < steps; ++i) {
+    p += 0.5 * dt * -std::sin(q);
+    q += dt * p;
+    p += 0.5 * dt * -std::sin(q);
+}
+```
+
+## Other elements
+
+> A blockquote, for quoting a source.
+
+- A bulleted list
+- with a second item
+
+1. A numbered list
+2. with a second item
+
+| Scheme   | Order | Symplectic |
+| -------- | ----- | ---------- |
+| Euler    | 1     | No         |
+| Leapfrog | 2     | Yes        |
+
+---
+
+A final paragraph after a rule, with a [link](/writing) and some **bold** text.

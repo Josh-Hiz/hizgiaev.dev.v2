@@ -1,0 +1,42 @@
+---
+import EntryList from "../../components/EntryList.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getPosts, getProjects, getTags, type Post, type Project } from "../../lib/content";
+
+// One page per tag in use (tutorial unit 5.2), each given only its own entries.
+export async function getStaticPaths() {
+  const tags = await getTags();
+  return Promise.all(
+    tags.map(async ({ tag }) => ({
+      params: { tag },
+      props: { posts: await getPosts({ tag }), projects: await getProjects({ tag }) },
+    })),
+  );
+}
+
+interface Props {
+  posts: Post[];
+  projects: Project[];
+}
+
+const { tag } = Astro.params;
+const { posts, projects } = Astro.props;
+const sections = [
+  { id: "tag-writing", label: "Writing", entries: posts, base: "/writing" },
+  { id: "tag-projects", label: "Projects", entries: projects, base: "/projects" },
+].filter((section) => section.entries.length > 0);
+---
+
+<PageLayout title={`#${tag}`} label="Tag" heading={`#${tag}`} description={`Everything tagged ${tag}.`}>
+  {
+    sections.map(({ id, label, entries, base }) => (
+      <section aria-labelledby={id} class="mt-16 max-w-3xl">
+        <h2 id={id} class="label border-b border-rule pb-3">
+          {label}
+        </h2>
+        <EntryList entries={entries} base={base} level={3} />
+      </section>
+    ))
+  }
+  <p class="caption mt-6"><a href="/tags" class="link">All tags</a></p>
+</PageLayout>

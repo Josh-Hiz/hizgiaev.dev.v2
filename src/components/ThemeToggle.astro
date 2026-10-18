@@ -1,0 +1,66 @@
+---
+// Half-lit moon: the lit half flips sides with the theme.
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:text-accent"
+  aria-label="Toggle dark mode"
+  title="Toggle dark mode"
+>
+  <svg viewBox="0 0 24 24" class="size-4.5" aria-hidden="true">
+    <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.25"></circle>
+    <path class="moon-lit" d="M12 3.75a8.25 8.25 0 0 1 0 16.5z" fill="currentColor"></path>
+  </svg>
+</button>
+
+<style>
+  .moon-lit {
+    transform-origin: 12px 12px;
+    transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  :global([data-theme="dark"]) .moon-lit {
+    transform: scaleX(-1);
+  }
+</style>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+  const osDark = matchMedia("(prefers-color-scheme: dark)");
+
+  const saved = () => {
+    try {
+      return localStorage.getItem("theme");
+    } catch {
+      return null;
+    }
+  };
+
+  const apply = (theme: string) => {
+    document.documentElement.dataset.theme = theme;
+    for (const button of buttons) button.setAttribute("aria-pressed", String(theme === "dark"));
+  };
+
+  apply(document.documentElement.dataset.theme ?? "light");
+
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      apply(next);
+      try {
+        localStorage.setItem("theme", next);
+      } catch {}
+    });
+  }
+
+  // Follow the OS setting until the visitor picks a theme themselves.
+  osDark.addEventListener("change", (e) => {
+    if (!saved()) apply(e.matches ? "dark" : "light");
+  });
+
+  // Keep other open tabs in sync when the toggle is clicked in one of them.
+  addEventListener("storage", (e) => {
+    if (e.key === "theme" && (e.newValue === "light" || e.newValue === "dark")) apply(e.newValue);
+  });
+</script>

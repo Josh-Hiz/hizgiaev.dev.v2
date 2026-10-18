@@ -1,0 +1,63 @@
+---
+// A 3D figure plate: <Figure3D figure="lorenz" number={1} caption="…" />.
+// The scene comes from src/lib/figures/scenes/<figure>.ts. three.js only downloads when the
+// figure nears the screen, so pages without figures (and visitors who never scroll) pay nothing.
+import type { FigureName } from "../lib/figures/registry";
+
+interface Props {
+  figure: FigureName;
+  caption: string;
+  number?: number | string;
+  /** Tailwind aspect class for the plate, e.g. "aspect-square". */
+  aspect?: string;
+  /** Numbers passed to the scene module as ctx.params. */
+  params?: Record<string, number>;
+  hint?: string;
+}
+
+const { figure, caption, number, aspect = "aspect-4/3", params = {}, hint = "drag to rotate" } = Astro.props;
+---
+
+<figure>
+  <div class:list={["relative border border-rule", aspect]} data-figure3d={figure} data-params={JSON.stringify(params)}>
+    <canvas class="block size-full cursor-grab active:cursor-grabbing" role="img" aria-label={caption}></canvas>
+    <p data-figure-fallback hidden class="caption absolute inset-0 grid place-items-center px-4 text-center">
+      This figure needs WebGL, which isn't available here.
+    </p>
+  </div>
+  <figcaption class="caption mt-3">
+    {number !== undefined && `Fig. ${number} — `}{caption}
+    {hint && <span class="text-rule"> · {hint}</span>}
+  </figcaption>
+</figure>
+
+<script>
+  import { figures, type FigureName } from "../lib/figures/registry";
+
+  async function load(el: HTMLElement) {
+    const canvas = el.querySelector("canvas")!;
+    try {
+      const [{ mount }, { default: definition }] = await Promise.all([
+        import("../lib/figures/runtime"),
+        figures[el.dataset.figure3d as FigureName](),
+      ]);
+      await mount(canvas, definition, JSON.parse(el.dataset.params ?? "{}"));
+    } catch (error) {
+      console.error(error);
+      canvas.hidden = true;
+      el.querySelector<HTMLElement>("[data-figure-fallback]")!.hidden = false;
+    }
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        io.unobserve(entry.target);
+        load(entry.target as HTMLElement);
+      }
+    },
+    { rootMargin: "300px" },
+  );
+  for (const el of document.querySelectorAll<HTMLElement>("[data-figure3d]")) io.observe(el);
+</script>

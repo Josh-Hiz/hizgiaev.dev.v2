@@ -1,0 +1,22 @@
+---
+import { render } from "astro:content";
+import { mdxComponents } from "../../components/mdx";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { getPosts, type Post } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout data={post.data} back={{ href: "/writing", label: "All writing" }}>
+  <Content components={mdxComponents} />
+</PostLayout>

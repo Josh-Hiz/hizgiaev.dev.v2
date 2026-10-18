@@ -1,0 +1,84 @@
+---
+import AssetImage from "./AssetImage.astro";
+import { site } from "../site.config";
+
+// "https://www.linkedin.com/in/name/" → "linkedin.com/in/name"
+const display = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+
+const contact: { label: string; text: string; href?: string }[] = [
+  { label: "Based in", text: site.location },
+  { label: "Email", text: site.email, href: `mailto:${site.email}` },
+  { label: "GitHub", text: display(site.social.github), href: site.social.github },
+  { label: "LinkedIn", text: display(site.social.linkedin), href: site.social.linkedin },
+];
+---
+
+<section
+  class="grid gap-10 pt-12 pb-16 sm:pt-16 md:grid-cols-12 md:gap-12 md:pb-20"
+  aria-labelledby="intro"
+>
+  <figure class="max-w-sm md:col-span-5 md:max-w-none">
+    <!-- One version per theme; the dark: variant follows data-theme on <html>. -->
+    <AssetImage
+      src="lambda-light.svg"
+      alt="The Greek letter lambda, drawn as a figure plate on graph paper"
+      loading="eager"
+      class="aspect-4/5 w-full border border-rule bg-paper-2 dark:hidden"
+    />
+    <AssetImage
+      src="lambda-dark.svg"
+      alt="The Greek letter lambda, drawn as a figure plate on graph paper"
+      loading="eager"
+      class="hidden aspect-4/5 w-full border border-rule bg-paper-2 dark:block"
+    />
+    <figcaption class="caption mt-3">Fig. 0 — λ.</figcaption>
+  </figure>
+
+  <div class="md:col-span-7 md:pt-2">
+    <p class="label mb-5">About</p>
+    <h1
+      id="intro"
+      class="font-serif text-[2rem] leading-[1.15] font-normal tracking-tight text-balance sm:text-[2.4rem]"
+    >
+      I write numerical code for physical systems, and try to make it <em class="text-accent">fast</em>.
+    </h1>
+
+    <div class="mt-7 space-y-5 text-ink-2">
+      <p>
+        My name is {site.name}. I work where physics meets the machine: simulating dynamical
+        systems, writing GPU kernels, and building the low-level software that makes both
+        possible. Lately I've also been applying the same tools to quantitative research and
+        the statistics of markets.
+      </p>
+      <p>
+        This site is a notebook. There are <a href="/writing" class="link">essays</a> on
+        numerical methods and hardware, <a href="/projects" class="link">projects</a> with
+        source code, <a href="/interests/physics" class="link">physics notes</a> worked through from
+        first principles, and some <a href="/interests/photography" class="link">photographs</a> taken
+        along the way.
+      </p>
+    </div>
+
+    <section aria-labelledby="contact" class="mt-9">
+      <h2 id="contact" class="label border-b border-rule pb-3">Contact</h2>
+      <dl class="mt-4 grid grid-cols-[6.5rem_1fr] gap-x-4 gap-y-2 text-[0.95rem]">
+        {
+          contact.map(({ label, text, href }) => (
+            <Fragment>
+              <dt class="label pt-[0.2rem]">{label}</dt>
+              <dd class="text-ink-2">
+                {href ? (
+                  <a href={href} class="link" rel={href.startsWith("http") ? "me noopener" : undefined}>
+                    {text}
+                  </a>
+                ) : (
+                  text
+                )}
+              </dd>
+            </Fragment>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
+</section>

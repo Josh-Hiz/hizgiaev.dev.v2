@@ -1,0 +1,79 @@
+---
+// An optimised image from src/assets that falls back to a placeholder plate if the file is
+// missing, rather than breaking the build. Pass the path relative to src/assets.
+// Served as AVIF with a WebP fallback; the browser takes the first format it supports.
+import type { ImageMetadata } from "astro";
+import { Picture } from "astro:assets";
+
+interface Props {
+  src: string;
+  alt: string;
+  class?: string;
+  widths?: number[];
+  sizes?: string;
+  loading?: "eager" | "lazy";
+  /** "high" for the main image above the fold (the page's largest paint). */
+  fetchpriority?: "high" | "low" | "auto";
+  /**
+   * 0–100, applied to every format. AVIF's scale runs lower than WebP's: AVIF at 50 looks
+   * about like WebP at 75–80; on a typical photo, 50 halves the size of WebP at its default.
+   */
+  quality?: number;
+}
+
+const { src, alt, class: className, quality = 50, ...rest } = Astro.props;
+
+// Note: every file this pattern matches is included in the build, used or not, so keep
+// unused images out of src/assets.
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/**/*.{jpg,jpeg,png,webp,avif,gif,svg}",
+  { eager: true },
+);
+const image = images[`../assets/${src}`]?.default;
+
+if (!image) console.warn(`[AssetImage] src/assets/${src} not found; showing a placeholder.`);
+---
+
+{
+  image?.format === "svg" ? (
+    // Vectors are already tiny and sharp at any size: serve the file as-is.
+    <img
+      src={image.src}
+      width={image.width}
+      height={image.height}
+      alt={alt}
+      class={className}
+      loading={rest.loading}
+      fetchpriority={rest.fetchpriority}
+      decoding="async"
+    />
+  ) : image ? (
+    <Picture
+      src={image}
+      alt={alt}
+      class={className}
+      formats={["avif", "webp"]}
+      fallbackFormat="webp"
+      quality={quality}
+      pictureAttributes={{ class: "block" }}
+      {...rest}
+    />
+  ) : (
+    <div
+      role="img"
+      aria-label={alt}
+      class:list={[
+        className,
+        // A missing image has no size of its own; give the plate a photo-like shape unless the caller set one.
+        !className?.includes("aspect-") && "aspect-3/2",
+        "relative grid place-items-center overflow-hidden",
+      ]}
+    >
+      <svg class="absolute inset-0 size-full text-rule" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="0" x2="100%" y2="100%" stroke="currentColor" vector-effect="non-scaling-stroke" />
+        <line x1="100%" y1="0" x2="0" y2="100%" stroke="currentColor" vector-effect="non-scaling-stroke" />
+      </svg>
+      <span class="caption relative bg-paper-2 px-2">Image unavailable</span>
+    </div>
+  )
+}

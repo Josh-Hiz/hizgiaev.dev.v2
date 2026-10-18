@@ -1,0 +1,28 @@
+---
+// The writing and projects that belong to an interest, by topic, each under its own heading.
+import EntryList from "./EntryList.astro";
+import { getPosts, getProjects } from "../lib/content";
+import type { Interest } from "../site.config";
+
+interface Props {
+  interest: Interest;
+}
+
+const { interest } = Astro.props;
+const topic = interest.topics;
+const sections = [
+  { id: `${interest.slug}-writing`, label: "Writing", base: "/writing", entries: await getPosts({ topic }) },
+  { id: `${interest.slug}-projects`, label: "Projects", base: "/projects", entries: await getProjects({ topic }) },
+];
+---
+
+{
+  sections.map(({ id, label, base, entries }) => (
+    <section aria-labelledby={id} class="mt-16 max-w-3xl">
+      <h2 id={id} class="label border-b border-rule pb-3">
+        {label}
+      </h2>
+      <EntryList entries={entries} base={base} level={3} empty={`No ${label.toLowerCase()} here yet.`} />
+    </section>
+  ))
+}

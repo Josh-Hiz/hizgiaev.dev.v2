@@ -1,0 +1,25 @@
+---
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getTags } from "../../lib/content";
+
+const tags = await getTags();
+---
+
+<PageLayout title="Tags" label="Index" heading="Tags" description="Writing and projects by tag.">
+  {
+    tags.length === 0 ? (
+      <p class="caption mt-12">No tags yet.</p>
+    ) : (
+      <ul class="mt-12 flex max-w-3xl flex-wrap gap-x-6 gap-y-3 border-t border-rule pt-6">
+        {tags.map(({ tag, count }) => (
+          <li>
+            <a href={`/tags/${tag}`} class="font-mono text-[0.85rem] text-ink-2 transition-colors hover:text-accent">
+              #{tag}
+            </a>
+            <span class="caption ml-1">{count}</span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>

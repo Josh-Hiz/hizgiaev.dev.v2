@@ -1,0 +1,63 @@
+---
+// One entry from a collection (a post now, a project later): header with topic, date and
+// tags, then the rendered Markdown in <slot />. Wraps BaseLayout.
+import "katex/dist/katex.min.css";
+import BaseLayout from "./BaseLayout.astro";
+import { formatDate, type Post, type Project } from "../lib/content";
+import { site, TOPIC_LABELS } from "../site.config";
+
+interface Props {
+  data: Post["data"] | Project["data"];
+  back: { href: string; label: string };
+}
+
+const { data, back } = Astro.props;
+const { title, description, date, topic, tags, draft } = data;
+const links = [
+  "repo" in data && data.repo && { href: data.repo, label: "Source" },
+  "demo" in data && data.demo && { href: data.demo, label: "Demo" },
+].filter((link) => !!link);
+---
+
+<BaseLayout title={`${title} · ${site.name}`} description={description}>
+  <article class="mx-auto max-w-2xl pt-12 pb-16 sm:pt-16 md:pb-20">
+    <header class="border-b border-rule pb-8">
+      <p class="label mb-5">
+        {TOPIC_LABELS[topic]} · <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        {draft && <span class="ml-2 text-accent">Draft</span>}
+      </p>
+      <h1 class="font-serif text-[2rem] leading-[1.15] font-normal tracking-tight text-balance sm:text-[2.4rem]">
+        {title}
+      </h1>
+      <p class="mt-4 text-[1.15rem] text-ink-2 italic">{description}</p>
+      {
+        (tags.length > 0 || links.length > 0) && (
+          <ul class="mt-5 flex flex-wrap gap-x-4 gap-y-1">
+            {links.map((link) => (
+              <li>
+                <a href={link.href} class="caption link">
+                  {link.label} ↗
+                </a>
+              </li>
+            ))}
+            {tags.map((tag) => (
+              <li>
+                <a href={`/tags/${tag}`} class="caption transition-colors hover:text-accent">
+                  #{tag}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="prose mt-10">
+      <slot />
+    </div>
+
+    <footer class="mt-14 border-t border-rule pt-6">
+      <a href={back.href} class="label transition-colors hover:text-accent">← {back.label}</a>
+    </footer>
+  </article>
+</BaseLayout>

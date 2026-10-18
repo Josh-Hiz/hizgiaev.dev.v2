@@ -1,0 +1,19 @@
+---
+import EntryList from "../../components/EntryList.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getPosts } from "../../lib/content";
+
+const posts = await getPosts();
+---
+
+<PageLayout
+  title="Writing"
+  label="Writing"
+  heading="[Placeholder heading for the writing index]"
+  description="Essays and notes."
+>
+  <EntryList entries={posts} base="/writing" />
+  <p class="caption mt-6">
+    <a href="/tags" class="link">Browse by tag</a> · <a href="/rss.xml" class="link">RSS</a>
+  </p>
+</PageLayout>

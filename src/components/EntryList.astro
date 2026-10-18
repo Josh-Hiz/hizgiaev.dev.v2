@@ -1,0 +1,43 @@
+---
+// A dated list of collection entries: date on the left; title, description and topic on the right.
+import { formatDate, type Post, type Project } from "../lib/content";
+import { TOPIC_LABELS } from "../site.config";
+
+interface Props {
+  entries: (Post | Project)[];
+  /** URL prefix for each entry, e.g. "/writing" → /writing/<id>. */
+  base: string;
+  empty?: string;
+  /** Heading level for entry titles: 3 when the list sits under its own h2. */
+  level?: 2 | 3;
+}
+
+const { entries, base, empty = "Nothing published yet.", level = 2 } = Astro.props;
+const Title = level === 3 ? "h3" : "h2";
+---
+
+{
+  entries.length === 0 ? (
+    <p class="caption mt-12">{empty}</p>
+  ) : (
+    <ol class="mt-12 max-w-3xl divide-y divide-rule border-y border-rule">
+      {entries.map(({ id, data }) => (
+        <li class="grid gap-1 py-5 sm:grid-cols-[8.5rem_1fr] sm:gap-6">
+          <p class="caption pt-[0.35rem]">
+            <time datetime={data.date.toISOString()}>{formatDate(data.date)}</time>
+          </p>
+          <div>
+            <Title class="font-serif text-[1.2rem] leading-snug">
+              <a href={`${base}/${id}`} class="text-ink transition-colors hover:text-accent">
+                {data.title}
+              </a>
+              {data.draft && <span class="label ml-2 text-accent">Draft</span>}
+            </Title>
+            <p class="mt-1 text-[1rem] text-ink-2">{data.description}</p>
+            <p class="label mt-2">{TOPIC_LABELS[data.topic]}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  )
+}

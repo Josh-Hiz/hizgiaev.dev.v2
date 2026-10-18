@@ -1,0 +1,36 @@
+---
+// A standard page: small label, large heading, optional intro paragraphs, then the content.
+// Wraps BaseLayout (head, header, footer).
+import BaseLayout from "./BaseLayout.astro";
+import { site } from "../site.config";
+
+interface Props {
+  /** Used in the browser tab as "<title> · <site name>". */
+  title: string;
+  label: string;
+  heading: string;
+  description?: string;
+}
+
+const { title, label, heading, description } = Astro.props;
+---
+
+<BaseLayout title={`${title} · ${site.name}`} description={description}>
+  <div class="pt-12 pb-16 sm:pt-16 md:pb-20">
+    <header class="max-w-2xl">
+      <p class="label mb-5">{label}</p>
+      <h1 class="font-serif text-[2rem] leading-[1.15] font-normal tracking-tight text-balance sm:text-[2.4rem]">
+        {heading}
+      </h1>
+      {
+        Astro.slots.has("intro") && (
+          <div class="mt-7 space-y-5 text-ink-2">
+            <slot name="intro" />
+          </div>
+        )
+      }
+    </header>
+
+    <slot />
+  </div>
+</BaseLayout>

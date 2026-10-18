@@ -1,0 +1,12 @@
+---
+import { site } from "../site.config";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-rule py-6">
+  <p class="caption">© {year} {site.name}</p>
+  <p class="caption">
+    Background: <span data-bg-label>off</span>{" "}·{" "}<button type="button" class="link cursor-pointer" data-bg-action="next">next</button><span data-bg-when-on hidden>{" "}·{" "}<button type="button" class="link cursor-pointer" data-bg-action="off">off</button></span>{" "}·{" "}<button type="button" class="link cursor-pointer" data-bg-action="edit">edit</button>
+  </p>
+</footer>

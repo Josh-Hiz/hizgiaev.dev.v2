@@ -1,0 +1,40 @@
+---
+import { site } from "../site.config";
+import ThemeToggle from "./ThemeToggle.astro";
+
+const path = Astro.url.pathname;
+---
+
+<!-- On phones: name + toggle on one row, nav on its own row below. -->
+<header class="flex flex-wrap items-center justify-between gap-x-7 gap-y-3 border-b border-rule pt-8 pb-5 sm:pt-12">
+  <a href="/" class="order-1 font-serif text-2xl tracking-tight text-ink sm:text-[1.7rem]">
+    {site.name}
+  </a>
+
+  <div class="order-2 sm:order-3">
+    <ThemeToggle />
+  </div>
+
+  <div class="order-3 w-full sm:order-2 sm:ml-auto sm:w-auto">
+    <nav aria-label="Primary">
+      <ul class="flex flex-wrap gap-x-5 gap-y-1 font-sans text-[0.9rem] text-ink-2 sm:gap-x-7">
+        {
+          site.nav.map((item) => {
+            const active = path === item.href || path.startsWith(`${item.href}/`);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  class:list={["transition-colors hover:text-accent", active && "text-accent"]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

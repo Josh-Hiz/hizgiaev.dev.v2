@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <!-- λ as a figure plate, dark theme. Colours match global.css [data-theme="dark"] tokens.
+       paper-2 #1a1916 · rule #302d28 · muted #9a9488 · ink #e9e4d8 -->
+  <defs>
+    <pattern id="minor" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" stroke="#302d28" stroke-width="0.5" />
+    </pattern>
+    <pattern id="major" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="url(#minor)" />
+      <path d="M100 0H0V100" fill="none" stroke="#302d28" stroke-width="1" />
+    </pattern>
+    <!-- Cuts the left leg off flat at the baseline, level with the bottom of the foot. -->
+    <clipPath id="baseline">
+      <rect width="400" height="398" />
+    </clipPath>
+  </defs>
+
+  <!-- Paper and graph grid -->
+  <rect width="400" height="500" fill="#1a1916" />
+  <rect width="400" height="500" fill="url(#major)" />
+
+  <!-- Construction circle about the centre -->
+  <circle cx="200" cy="250" r="150" fill="none" stroke="#9a9488" stroke-width="0.75" opacity="0.45" />
+
+  <!-- Corner crop marks -->
+  <g stroke="#9a9488" stroke-width="1" fill="none" opacity="0.7">
+    <path d="M24 44V24H44" /><path d="M356 24H376V44" /><path d="M376 456V476H356" /><path d="M44 476H24V456" />
+  </g>
+
+  <!-- Guide line and letter, shifted to sit centred in the circle -->
+  <g transform="translate(-29 -10)">
+    <!-- Guide along the main diagonal -->
+    <path d="M166 60L320 470" fill="none" stroke="#9a9488" stroke-width="0.75" stroke-dasharray="4 5" opacity="0.55" />
+
+    <!-- λ, geometric: one weight throughout, sharp corners, flat ends.
+         Main stroke: short bar at the top, steep diagonal, flat foot to the right.
+         Left leg: from the diagonal down to the baseline. -->
+    <g fill="none" stroke="#e9e4d8" stroke-width="36" stroke-linecap="butt" stroke-linejoin="miter" clip-path="url(#baseline)">
+      <path d="M128 140H196L286 380H330" />
+      <path d="M230 230L130 420" />
+    </g>
+  </g>
+</svg>

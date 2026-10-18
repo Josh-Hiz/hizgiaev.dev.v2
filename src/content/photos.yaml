@@ -1,0 +1,28 @@
+# Photographs for /interests/photography, shown in this order.
+# Put image files in src/assets/photos/ and reference them as photos/<file>.
+# Each entry needs a unique id. `place` and `date` are optional.
+#
+# PLACEHOLDER entries: they point at files that don't exist, so they render as
+# "Image unavailable" plates. They're drafts, so they only appear in `astro dev`.
+# Replace them with your own.
+
+- id: sample-1
+  src: photos/sample-1.jpg
+  alt: "[Placeholder: describe what's in the photo]"
+  caption: "[Placeholder caption]"
+  place: "[Place]"
+  date: 2026-01-01
+  draft: true
+
+- id: sample-2
+  src: photos/sample-2.jpg
+  alt: "[Placeholder: describe what's in the photo]"
+  caption: "[Placeholder caption]"
+  draft: true
+
+- id: sample-3
+  src: photos/sample-3.jpg
+  alt: "[Placeholder: describe what's in the photo]"
+  caption: "[Placeholder caption]"
+  place: "[Place]"
+  draft: true

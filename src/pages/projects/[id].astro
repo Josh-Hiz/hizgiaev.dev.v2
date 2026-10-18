@@ -1,0 +1,22 @@
+---
+import { render } from "astro:content";
+import { mdxComponents } from "../../components/mdx";
+import PostLayout from "../../layouts/PostLayout.astro";
+import { getProjects, type Project } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<PostLayout data={project.data} back={{ href: "/projects", label: "All projects" }}>
+  <Content components={mdxComponents} />
+</PostLayout>

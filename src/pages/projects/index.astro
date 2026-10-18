@@ -1,0 +1,16 @@
+---
+import EntryList from "../../components/EntryList.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { getProjects } from "../../lib/content";
+
+const projects = await getProjects();
+---
+
+<PageLayout
+  title="Projects"
+  label="Projects"
+  heading="[Placeholder heading for the projects index]"
+  description="Things built, with source code."
+>
+  <EntryList entries={projects} base="/projects" />
+</PageLayout>

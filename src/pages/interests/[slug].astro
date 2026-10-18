@@ -1,0 +1,30 @@
+---
+import InterestEntries from "../../components/InterestEntries.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { interests, type Interest } from "../../site.config";
+
+// Interests without a page file of their own share this one.
+export function getStaticPaths() {
+  // Inside the function: Astro runs getStaticPaths on its own, without the rest of the frontmatter.
+  const CUSTOM = ["physics", "photography"]; // these have physics.astro / photography.astro
+  return interests
+    .filter((interest) => !CUSTOM.includes(interest.slug))
+    .map((interest) => ({ params: { slug: interest.slug }, props: { interest } }));
+}
+
+interface Props {
+  interest: Interest;
+}
+
+const { interest } = Astro.props;
+---
+
+<PageLayout title={interest.label} label="Interests" heading={interest.label} description={interest.description}>
+  <Fragment slot="intro">
+    <p>{interest.description}</p>
+  </Fragment>
+
+  <InterestEntries interest={interest} />
+
+  <p class="caption mt-6"><a href="/interests" class="link">All interests</a></p>
+</PageLayout>

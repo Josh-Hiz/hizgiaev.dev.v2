@@ -1,0 +1,31 @@
+---
+import Figure3D from "../../components/Figure3D.astro";
+import InterestEntries from "../../components/InterestEntries.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { interests } from "../../site.config";
+
+// Physics has its own page for the figures; the writing and projects lists are shared.
+const interest = interests.find((i) => i.slug === "physics")!;
+---
+
+<PageLayout title="Physics" label="Interests" heading="Physics" description={interest.description}>
+  <Fragment slot="intro">
+    <p>[Placeholder: what draws you to physics and what these notes cover.]</p>
+  </Fragment>
+
+  <section aria-labelledby="physics-figures" class="mt-16">
+    <h2 id="physics-figures" class="label border-b border-rule pb-3">Figures</h2>
+    <div class="mt-8 grid gap-10 md:grid-cols-2">
+      <Figure3D figure="lorenz" number={1} caption="The Lorenz attractor, σ = 10, ρ = 28, β = 8/3." />
+      <Figure3D
+        figure="pendulum"
+        number={2}
+        caption="A spherical pendulum. Its path precesses into a rosette."
+      />
+    </div>
+  </section>
+
+  <InterestEntries interest={interest} />
+
+  <p class="caption mt-6"><a href="/interests" class="link">All interests</a></p>
+</PageLayout>

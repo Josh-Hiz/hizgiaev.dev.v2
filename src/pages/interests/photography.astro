@@ -1,0 +1,47 @@
+---
+import AssetImage from "../../components/AssetImage.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
+import { formatDate, getPhotos } from "../../lib/content";
+
+// Entries live in src/content/photos.yaml; image files in src/assets/photos/.
+const photos = await getPhotos();
+---
+
+<PageLayout title="Photography" label="Interests" heading="Photography">
+  <Fragment slot="intro">
+    <p>[Placeholder: what you photograph, and with what.]</p>
+  </Fragment>
+
+  {
+    photos.length === 0 ? (
+      <p class="caption mt-12">No photographs yet.</p>
+    ) : (
+      // CSS columns keep each photo's own proportions, like plates laid out on a page.
+      <div class="mt-12 columns-1 gap-8 sm:columns-2 lg:columns-3">
+        {photos.map(({ data }, i) => (
+          <figure class="mb-10 break-inside-avoid">
+            <AssetImage
+              src={data.src}
+              alt={data.alt}
+              widths={[400, 800, 1200]}
+              sizes="(min-width: 1024px) 20rem, (min-width: 640px) 45vw, 100vw"
+              loading={i < 3 ? "eager" : "lazy"}
+              class="w-full border border-rule bg-paper-2"
+            />
+            <figcaption class="caption mt-3">
+              Pl. {i + 1} — {data.caption}
+              {data.draft && <span class="ml-1 text-accent">(draft)</span>}
+              {(data.place || data.date) && (
+                <span class="block">
+                  {[data.place, data.date && formatDate(data.date)].filter(Boolean).join(" · ")}
+                </span>
+              )}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )
+  }
+
+  <p class="caption mt-6"><a href="/interests" class="link">All interests</a></p>
+</PageLayout>

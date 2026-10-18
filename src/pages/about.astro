@@ -1,0 +1,42 @@
+---
+import PageLayout from "../layouts/PageLayout.astro";
+import { getExperience } from "../lib/content";
+
+// Entries live in src/content/experience.yaml.
+const sections = [
+  { id: "experience", label: "Experience", entries: await getExperience("experience") },
+  { id: "education", label: "Education", entries: await getExperience("education") },
+];
+---
+
+<PageLayout title="About" label="About" heading="[Placeholder headline]">
+  <Fragment slot="intro">
+    <p>[Placeholder: a longer introduction than the homepage, covering how you got here and what you work on.]</p>
+    <p>[Placeholder: what you're looking for, or how to reach you.]</p>
+  </Fragment>
+
+  {
+    sections.map(({ id, label, entries }) => (
+      <section aria-labelledby={id} class="mt-16 max-w-3xl">
+        <h2 id={id} class="label border-b border-rule pb-3">
+          {label}
+        </h2>
+        <ol class="divide-y divide-rule">
+          {entries.map(({ data }) => (
+            <li class="grid gap-1 py-5 sm:grid-cols-[8.5rem_1fr] sm:gap-6">
+              <p class="caption pt-[0.3rem]">
+                {data.start} – {data.end}
+              </p>
+              <div>
+                <h3 class="font-serif text-[1.15rem] leading-snug text-ink">
+                  {data.title}, <em class="text-ink-2">{data.org}</em>
+                </h3>
+                <p class="mt-1 text-[1rem] text-ink-2">{data.summary}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+</PageLayout>
